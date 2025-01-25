@@ -1,0 +1,138 @@
+1. Generate a new Rails API application (if not already created):
+   rails new my_social_media_app_backend --api
+   Note: This command creates a new Rails application configured to serve as an API.
+
+2. Add the `rack-cors` gem to handle CORS:
+   Add to Gemfile:
+   gem 'rack-cors', require: 'rack/cors'
+   Note: This gem allows your Rails backend to handle Cross-Origin Resource Sharing (CORS) requests.
+
+3. Install the gems:
+   bundle install
+   Note: This command installs all the gems specified in your Gemfile.
+
+4. Configure CORS:
+   Create or update the `config/initializers/cors.rb` file:
+   Rails.application.config.middleware.insert_before 0, Rack::Cors do
+     allow do
+       origins 'http://localhost:3000' # Update this to match your React frontend URL
+       resource '*',
+         headers: :any,
+         methods: [:get, :post, :put, :patch, :delete, :options, :head]
+     end
+   end
+   Note: This configuration allows your React frontend to make requests to your Rails backend.
+
+5. Generate the User model:
+   rails generate model User username:string email:string password_digest:string first_name:string last_name:string bio:text profile_picture:string
+   Note: This command generates a User model with the specified attributes.
+
+6. Run the migration:
+   rails db:migrate
+   Note: This command applies the migration to create the `users` table in your database.
+
+7. Create the User model:
+   Create the `app/models/user.rb` file:
+   class User < ApplicationRecord
+     has_secure_password
+
+     validates :username, presence: true, uniqueness: true
+     validates :email, presence: true, uniqueness: true
+     validates :password, presence: true, length: { minimum: 6 }
+   end
+   Note: This model includes validations and password security.
+
+8. Add the `bcrypt` gem for password hashing:
+   Add to Gemfile:
+   gem 'bcrypt', '~> 3.1.7'
+   Note: This gem is used for securely hashing passwords.
+
+9. Install the gems:
+   bundle install
+   Note: This command installs all the gems specified in your Gemfile.
+
+10. Generate the Users controller:
+    rails generate controller Users
+    Note: This command generates a Users controller with default actions.
+
+11. Edit the Users controller:
+    Update the `app/controllers/users_controller.rb` file:
+    class UsersController < ApplicationController
+      def index
+        @users = User.all
+        render json: @users
+      end
+
+      def show
+        @user = User.find(params[:id])
+        render json: @user
+      end
+
+      def create
+        @user = User.new(user_params)
+        if @user.save
+          render json: @user, status: :created
+        else
+          render json: @user.errors, status: :unprocessable_entity
+        end
+      end
+
+      private
+
+      def user_params
+        params.require(:user).permit(:username, :email, :password, :password_confirmation, :first_name, :last_name, :bio, :profile_picture)
+      end
+    end
+    Note: This controller handles user-related actions and renders JSON responses.
+
+12. Define routes:
+    Update the `config/routes.rb` file:
+    Rails.application.routes.draw do
+      resources :users
+      # other routes...
+    end
+    Note: This defines RESTful routes for the Users controller.
+
+13. Seed the database with sample data:
+    Update the `db/seeds.rb` file:
+    User.create!(
+      username: 'john_doe',
+      email: 'john_doe@example.com',
+      password: 'password123',
+      password_confirmation: 'password123',
+      first_name: 'John',
+      last_name: 'Doe',
+      bio: 'Just a regular John Doe.',
+      profile_picture: 'https://example.com/john_doe.jpg'
+    )
+
+    User.create!(
+      username: 'jane_doe',
+      email: 'jane_doe@example.com',
+      password: 'password123',
+      password_confirmation: 'password123',
+      first_name: 'Jane',
+      last_name: 'Doe',
+      bio: 'Just a regular Jane Doe.',
+      profile_picture: 'https://example.com/jane_doe.jpg'
+    )
+
+    User.create!(
+      username: 'alice_smith',
+      email: 'alice_smith@example.com',
+      password: 'password123',
+      password_confirmation: 'password123',
+      first_name: 'Alice',
+      last_name: 'Smith',
+      bio: 'Alice in Wonderland.',
+      profile_picture: 'https://example.com/alice_smith.jpg'
+    )
+    Note: This seeds the database with sample user data.
+
+14. Run the seed command:
+    rails db:seed
+    Note: This command populates the database with the sample data defined in `db/seeds.rb`.
+
+15. Start the Rails server:
+    rails server
+    Note: This command starts the Rails server.
