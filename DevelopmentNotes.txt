@@ -136,3 +136,37 @@
 15. Start the Rails server:
     rails server
     Note: This command starts the Rails server.
+
+TODO Contienue to FrontEnd
+16. Fetch data from React: 
+    Use `axios` or `fetch` in your React application to make HTTP requests to your Rails API. Here is an example using `axios`:
+    import React, { useEffect, useState } from 'react';
+    import axios from 'axios';
+
+    const App = () => {
+      const [users, setUsers] = useState([]);
+
+      useEffect(() => {
+        axios.get('http://localhost:3001/users') // Update the URL to match your Rails API endpoint
+          .then(response => {
+            setUsers(response.data);
+          })
+          .catch(error => {
+            console.error('There was an error fetching the users!', error);
+          });
+      }, []);
+
+      return (
+        <div>
+          <h1>Users</h1>
+          <ul>
+            {users.map(user => (
+              <li key={user.id}>{user.username}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    };
+
+    export default App;
+    Note: This example fetches user data from the Rails API and displays it in a list.
