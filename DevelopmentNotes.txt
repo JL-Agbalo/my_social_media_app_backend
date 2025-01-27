@@ -277,3 +277,20 @@ Study resources:
 
 By implementing these measures and continuously educating yourself on security best practices, you can better protect your data from unauthorized access through your API.
 
+
+Rails 8 Authentication
+Rails New
+Install Authentication
+Using Authentication
+
+A couple handy tools that come out of the bos:
+- authenticated? To check if the user is login
+- allow_unauthenticated_access
+- after_authentication_url
+- current.user
+
+Authentication:
+https://www.youtube.com/watch?v=uGllXLfRx60
+
+Authentication Adding Signup flow and user Profile
+https://www.youtube.com/watch?v=iTDRjImTTCg&t=0s
